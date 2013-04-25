@@ -119,7 +119,7 @@ Using this command line:
 
 **Note that the date name starts with a dot (.).**
 
-The **date** variable will be substitute with the Python code:
+The **date** variable will be substituted with the Python code:
     
     time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime())
 
@@ -139,7 +139,7 @@ The previus command will sends out this SIP request:
     Date: Thu, 25 Apr 2013 003024 +0000
     Max-Forwards: 70
 
-As you can see the **Date** header has beer substituted with the generated date.
+As you can see the **Date** header has been substituted with the generated date.
 If in your python code you need an additional module you can dynamically include with the **-m** switch.
 
 Here the list of available options:
