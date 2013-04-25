@@ -167,7 +167,7 @@ Here the list of available options:
 ## Examples
 
 Here a list of examples and some SIP templates.
-All following examples require these parameters configured on the phone:
+All following examples can be used against a snom phone, these parameters configured on the phone are required:
 
 * [user_sipusername_as_line](http://wiki.snom.com/wiki/index.php/Settings/ user_sipusername_as_line) (aka "Supoort for broken registrar") to "on"
 * [filter_registrar](http://wiki.snom.com/wiki/index.php/Settings/filter_registrar) to "off"
