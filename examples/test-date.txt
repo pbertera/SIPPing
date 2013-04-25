@@ -1,0 +1,11 @@
+OPTIONS sip:%(dest_ip)s:%(dest_port)s SIP/2.0
+Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s
+Max-Forwards: 70
+From: "fake" <sip:fake@%(source_ip)s>
+To: <sip:%(dest_ip)s:%(dest_port)s>
+Contact: <sip:fake@%(source_ip)s:%(source_port)s>
+Call-ID: fake-id@%(source_ip)s
+User-Agent: SIPPing
+Date: %(date)s
+Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO, PUBLISH
+Supported: replaces, timer

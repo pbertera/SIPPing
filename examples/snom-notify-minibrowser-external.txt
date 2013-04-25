@@ -1,0 +1,11 @@
+NOTIFY sip:%(dest_ip)s:%(dest_port)s SIP/2.0
+Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s
+From: <sip:fake@%(source_ip)s>;tag=2502
+To: <sip:fake@%(dest_ip)s>;tag=2502
+Call-ID: blablub@snom320xxx
+Max-Forwards: 70
+Event: xml
+Subscription-State: active;expires=30000
+Content-Type: application/snomxml
+
+%(appfile)s

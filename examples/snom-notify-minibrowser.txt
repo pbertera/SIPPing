@@ -1,0 +1,24 @@
+NOTIFY sip:%(dest_ip)s:%(dest_port)s SIP/2.0
+Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s
+From: <sip:fake@%(source_ip)s>;tag=2502
+To: <sip:fake@%(dest_ip)s>;tag=2502
+Call-ID: blablub@snom320xxx
+Max-Forwards: 70
+Event: xml
+Subscription-State: active;expires=30000
+Content-Type: application/snomxml
+
+<?xml version="1.0" encoding="UTF-8"?>
+<SnomIPPhoneDirectory track="no">
+<Title>Menutitle: %(seq)d</Title>
+<Prompt>Prompt</Prompt>
+<DirectoryEntry>
+<Name>John</Name>
+<Telephone>123456789</Telephone>
+</DirectoryEntry>
+<DirectoryEntry>
+<Name>Doe</Name>
+<Telephone>987654321</Telephone>
+</DirectoryEntry>
+</SnomIPPhoneDirectory>
+

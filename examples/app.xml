@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SnomIPPhoneText>
+ <Title>Loaded app</Title>
+ <Prompt>Prompt Text</Prompt>
+ <Text>
+ This is a test application loaded from an external file
+ </Text>
+</SnomIPPhoneText>

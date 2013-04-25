@@ -1,0 +1,7 @@
+NOTIFY sip:%(user)s@%(dest_ip)s SIP/2.0
+To: sip:%(user)s@%(dest_ip)s
+From: sip:sipsak@%(source_ip)s
+CSeq: 10 NOTIFY
+Call-ID: 1234@%(source_ip)s
+Event: check-sync;reboot=false
+
