@@ -207,7 +207,7 @@ This command requires the [xml_notify](http://wiki.snom.com/Settings/xml_notify)
     
 **Note:** this example uses also the *%(seq)d* formatter
 
-## include an external file
+### include an external file
 
 This command uses a python evaluated variable to include an external file:
 
