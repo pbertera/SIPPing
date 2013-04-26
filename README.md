@@ -199,7 +199,13 @@ This command force a phone to synchronize its settings with the provisioning ser
 This command force a phone to reboot and synchronize its settings with the provisioning server
 
     sipping.py -r examples/snom-check-sync-reboot.txt -v user:151  -d 172.16.18.35 -p 5060 -S 172.16.18.90  -P 5060 -c1
-    
+
+### send a snom PnP multicast request
+
+This command sends out a SUBSCRIBE for PnP provisioning
+
+    sipping.py -d sip.mcast.net -p 5060 -S 172.16.18.91 -P 5060 -r examples/snom-pnp.txt -v mac:3C0754399E3D
+
 ### fire-up a minibrowser application on a snom phone
 
 This command sends to the phone a minibrowser XML application.

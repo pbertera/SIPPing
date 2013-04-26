@@ -203,9 +203,14 @@ def gen_request(template_vars, options):
 		if "cseq" not in req.headers:
 			req.headers["cseq"] = "%d %s" % (i, req.method)
 		yield str(req)
-	
+
 def open_sock(options):
-	sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+	try:
+		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
+		sock.setblocking(0)
+	except Exception, e:
+		print "ERROR: cannot create socket. %s" % e
+		sys.exit(-1)
 	try:
 		sock.seckopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 		sock.seckopt(socket.SOL_SOCKET, socket.SO_REUSEPORT, 1)
@@ -285,7 +290,6 @@ def main():
 	
 	opt.add_option('-m', dest='modules', type='string', default=[], action='append',
 						   help='load additionals Python modules used in Python interpreted template variables')
-
 
 	options, args = opt.parse_args(sys.argv[1:])
 
