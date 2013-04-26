@@ -312,7 +312,7 @@ def main():
 	for v in options.var[1:]:
 		try:
 			key = v.split(":")[0]
-			val = "".join(v.split(":")[1:])
+			val = ":".join(v.split(":")[1:])
 			template_vars.update({key: val})
 		except IndexError:
 			print "ERROR: variables must be in format name:value. %s" % v
@@ -329,8 +329,12 @@ def main():
 		print
 
 	count = options.count
-	sock = open_sock(options)
-	
+	try:
+		sock = open_sock(options)
+	except Exception, e:
+		print "ERROR: cannot open socket. %s" % e
+		sys.exit(-1)
+
 	sent = rcvd = ok_recvd = notify_recvd = 0 
 	
 	try:
@@ -341,8 +345,10 @@ def main():
 				if "content-length" not in sip_req.headers:
 					sip_req.headers["content-length"] = len(sip_req.body)
 				
-				sock.sendto(str(sip_req),(options.dest_ip, options.dest_port))
-				
+				try:	
+					sock.sendto(str(sip_req),(options.dest_ip, options.dest_port))
+				except Exception, e:
+					print "ERROR: cannot send packet to %s:%d. %s" % (options.dest_ip, options.dest_port, e)
 				if not options.quiet:	
 					print "sent Request %s to %s:%d cseq=%s" % (sip_req.method, options.dest_ip, options.dest_port, sip_req.headers['cseq'].split()[0])
 					if options.verbose:
