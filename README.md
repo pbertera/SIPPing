@@ -2,17 +2,16 @@
 
 SIPPing is a simple SIP packet forging tool written in pure Python.
 
-With SIPPing you can create SIP Requests based on simple text templates. In the command line you can define variables that will be substituted in your template.
-
-For comments or bugs drop me a line: pietro@bertera.it
+With SIPPing you can create SIP Requests based on simple text templates. In the command line you can define variables that will be substituted in template.
 
 ### Features:
 
 * inline parsable templates for SIP messaging
-* "ping style" behavior: SIPPing sends out a SIP Rrequest and wait for the response
+* "ping style" behavior: SIPPing sends out a SIP Request and wait for the response
 * aggressive mode: do not wait for any response and send out the request
-* you can define variables as a Python code
-* Content-Lenght and CSeq headers auto generated
+* you can use Python code for dynamic variable generation
+* you can dynamically load any python module used by your python variables
+* *Content-Length* and *CSeq* headers can be automatically generated (if not present in template file)
 
 ### Templates:
 
@@ -64,7 +63,7 @@ This command execution will sends out 3 SIP request to 172.16.18.35 using 5060 a
     
     OPTIONS sip:760.snomlabo.local:5060 SIP/2.0
 
-As you can see **user**, **destination** and **port** format strings are substituted with command line defined variables. You can notice also that **Content-Length** and **CSeq** headear are automatically generated, you can avoid the automatic generation of these headers defining its in template file.
+As you can see **user**, **destination** and **port** format strings are substituted with command line defined variables. You can notice also that **Content-Length** and **CSeq** header are automatically generated, you can avoid the automatic generation of these headers defining its in template file.
 
 Here the result of the command execution:
 
@@ -80,20 +79,20 @@ Here the result of the command execution:
 
 #### Runtime variables
 
-SIPPing already define some variables compiled at runtime using command line parameters:
+SIPPing already defines some variables compiled at runtime using command line parameters:
 
 * **dest_ip** destination IP address (extracted from the **-d** option )
 * **dest_port** destination port (extracted from **-p** option)
-* **source_ip** source ip address (extraceted from **-S** option)
+* **source_ip** source ip address (extracted from **-S** option)
 * **source_port** source port address (extracted from **-P** option)
 * **seq** seq number (auto generated if CSeq header is missing from the template)
 
-You don't need to define these variables with **-v** switch: values are already extracted from command line options
+You don't need to define these variables with **-v** switch: values are already extracted from command line options.
 
 #### Python dynamic variables
 
 SIPPing supports also Python dynamic variables evaluated at runtime as a Python code.
-You need to define these variables with a name starting with a dot (.) in command line switch.
+You need to define these variables with a name starting with a **dot** (**.**) in command line switch.
 
 Take a look on this example template that uses the **date** variable:
 
@@ -119,11 +118,11 @@ Using this command line:
 
 **Note that the date name starts with a dot (.).**
 
-The **date** variable will be substituted with the Python code:
+The **date** variable will be substitute with the Python code:
     
     time.strftime("%a, %d %b %Y %H:%M:%S +0000", time.gmtime())
 
-The previus command will sends out this SIP request:
+The previous command will sends out this SIP request:
 
     OPTIONS sip:172.16.18.35:5060 SIP/2.0
     Content-Length: 0
@@ -139,7 +138,7 @@ The previus command will sends out this SIP request:
     Date: Thu, 25 Apr 2013 003024 +0000
     Max-Forwards: 70
 
-As you can see the **Date** header has been substituted with the generated date.
+As you can see the **Date** header has beer substituted with the generated date.
 If in your python code you need an additional module you can dynamically include with the **-m** switch.
 
 Here the list of available options:
@@ -167,9 +166,9 @@ Here the list of available options:
 ## Examples
 
 Here a list of examples and some SIP templates.
-All following examples can be used against a snom phone, these parameters configured on the phone are required:
+All following examples require these parameters configured on the phone:
 
-* [user_sipusername_as_line](http://wiki.snom.com/wiki/index.php/Settings/ user_sipusername_as_line) (aka "Supoort for broken registrar") to "on"
+* [user_sipusername_as_line](http://wiki.snom.com/wiki/index.php/Settings/ user_sipusername_as_line) (aka "Support for broken registrar") to "on"
 * [filter_registrar](http://wiki.snom.com/wiki/index.php/Settings/filter_registrar) to "off"
 * [network_id_port](http://wiki.snom.com/Settings/network_id_port): 5060
 
@@ -191,13 +190,13 @@ Be aware that you need to reconfigure these parameters on the phone:
 
 ### trigger up a check-sync on a snom phone (no reboot)
 
-This command force a phone to syncronize its settings with the provisioning server
+This command force a phone to synchronize its settings with the provisioning server
 
     sipping.py -r examples/snom-check-sync.txt -v user:151  -d 172.16.18.35 -p 5060 -S 172.16.18.90  -P 5060 -c1
     
 ### trigger up a check-sync on a snom phone (with reboot)
 
-This command force a phone to reboot and syncronize its settings with the provisioning server
+This command force a phone to reboot and synchronize its settings with the provisioning server
 
     sipping.py -r examples/snom-check-sync-reboot.txt -v user:151  -d 172.16.18.35 -p 5060 -S 172.16.18.90  -P 5060 -c1
     
@@ -211,7 +210,7 @@ This command requires the [xml_notify](http://wiki.snom.com/Settings/xml_notify)
     
 **Note:** this example uses also the *%(seq)d* formatter
 
-### include an external file
+## include an external file
 
 This command uses a python evaluated variable to include an external file:
 
@@ -265,4 +264,32 @@ This command uses a python evaluated variable to include an external file:
      <Text>
      This is a test application loaded from an external file
      </Text>
-    </SnomIPPhoneText>
+    </SnomIPPhoneText>ù
+
+## Installation
+You need to download the sipping.py script and run it:
+
+    python sipping.py [options]
+or
+
+    chmod +x sipping.py
+    ./sipping.py [options]
+
+You can download SIPPing from the git master branch on [github](https://github.com/pbertera/SIPPing/archive/master.zip).
+
+#### Requirements:
+There is no particular requirements, this script runs on standard Python 2.X (tested with >= v2.4), no additional modules is required. Runs on GNU/Linux, MacOSX and Windows (untested at the moment).
+
+## FAQ
+
+* **Q:** when I run sipping.py I receive this error:
+
+    **ERROR: error in template processing. unsupported format character 'X' (0xYZ) at index K**
+    
+* **R:** this means that you used a wrong format string: all format string must be wrote in this format: **%(NAME)s** where **NAME** is the variable name (pleas note the starting *%* char and the ending *s*). The only exception is for **%(seq)d** variable. You can read more information about dictionary based string formatting [here](http://www.diveintopython.net/html_processing/dictionary_based_string_formatting.html) and [here](http://docs.python.org/2/library/stdtypes.html#string-formatting).
+
+* **Q:** when I run sipping.py I receive this error:
+
+    **ERROR: missing template variable. 'var_name'**
+
+* **A:** this means that a variable with name **var_name** is missing, you can declare via command line using the *-v var_name:value* switch.
