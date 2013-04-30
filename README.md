@@ -165,8 +165,8 @@ Here the list of available options:
 
 ## Examples
 
-Here a list of examples and some SIP templates.
-All following examples require these parameters configured on the phone:
+Here a list of examples and some SIP templates contained in the examples/ directory.
+All following examples uses a snom phone as a target device and require these parameters configured on the phone:
 
 * [user_sipusername_as_line](http://wiki.snom.com/wiki/index.php/Settings/ user_sipusername_as_line) (aka "Support for broken registrar") to "on"
 * [filter_registrar](http://wiki.snom.com/wiki/index.php/Settings/filter_registrar) to "off"
@@ -215,6 +215,18 @@ This command requires the [xml_notify](http://wiki.snom.com/Settings/xml_notify)
     sipping.py -r examples/snom-notify-minibrowser.txt -d 172.16.18.35 -p 5060 -S 172.16.18.90  -P 5060 -c1 -a
     
 **Note:** this example uses also the *%(seq)d* formatter
+
+### snom phones led controls
+
+With this example template you can turn on a phone button.
+This command uses a Python variable (**callid**) in order to generate a random Call-ID SIP header.
+You need to configure a function key as a button with number **1** (see **key** variable).
+
+    ./sipping.py -a -q -d 172.16.18.35 -r examples/snom-led-on.txt -v user:202 -v key:1 -v .callid:"''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(6))" -vcolor:$color -m string -m random -c1
+
+With this command you can turn off the phone led:
+
+    ./sipping.py -d 172.16.18.35 -r examples/snom-led-off.txt -v user:202 -v key:$key -v .callid:"''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(6))" -m string -m random -c1 -a -q
 
 ## include an external file
 
