@@ -1,0 +1,13 @@
+MESSAGE sip:%(user)s@%(dest_ip)s:%(dest_port)s;transport=udp SIP/2.0
+From: "fake" <sip:fake@%(source_ip)s>;tag=as2e95fad1
+To: <sip:%(user)s@%(dest_ip)s:%(dest_port)s;line=kutixubf>
+Call-ID: %(callid)s@test
+CSeq: 59620 MESSAGE
+Max-Forwards: 70
+Contact: <sip:fake@%(source_ip)s:%(source_port)s>
+Subject: buttons
+Content-Type: application/x-buttons
+
+k=%(key)s
+o=%(color)s
+c=on
