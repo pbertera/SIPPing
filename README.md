@@ -282,7 +282,47 @@ This command uses a python evaluated variable to include an external file:
      <Text>
      This is a test application loaded from an external file
      </Text>
-    </SnomIPPhoneText>ù
+    </SnomIPPhoneText>
+    
+## send contiuous REGISTER with incremental CSeq and random Call-ID headers
+
+This example shows how to send out REGISTER requests every 3 seconds (-i 3) with incremental CSeq header and random generated Call-ID.
+
+**file:** *examples/register.txt*
+
+    REGISTER sip:%(dest_ip)s SIP/2.0
+    Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s;branch=z9hG4bK-p985iy;rport
+    From: "fake" <sip:fake@%(source_ip)s>;tag=as2e95fad1
+    To: <sip:%(user)s@%(dest_ip)s:%(dest_port)s;line=kutixubf>
+    Contact: <sip:fake@%(source_ip)s:%(source_port)s>
+    Call-ID: %(callid)s@fake
+    CSeq: %(seq)d REGISTER
+    Max-Forwards: 70
+    Supported: path, outbound, gruu
+    User-Agent: SIPPing fake UA
+    Expires: 3600
+    Content-Length: 0
+
+**Command executed:**
+
+    ./sipping.py -r examples/register.txt -d 172.16.18.35 -vuser:testuser -v .callid:"''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(6))" -m string -m random -i 3 -S  172.16.18.90
+
+**Request sent:**
+
+    REGISTER sip:172.16.18.35 SIP/2.0
+    Content-Length: 0
+    Via: SIP/2.0/UDP 172.16.18.90:5060;branch=z9hG4bK-p985iy;rport
+    From: "fake" <sip:fake@172.16.18.90>;tag=as2e95fad1
+    Supported: path, outbound, gruu
+    Expires: 3600
+    User-Agent: SIPPing fake UA
+    To: <sip:Snom@172.16.18.35:5060;line=kutixubf>
+    Contact: <sip:fake@172.16.18.35:5060>
+    CSeq: 1 REGISTER
+    Call-ID: j8c5vl@fake
+    Max-Forwards: 70
+
+
 
 ## Installation
 You need to download the sipping.py script and run it:
