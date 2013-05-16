@@ -337,6 +337,7 @@ This example shows how to send out REGISTER requests every 3 seconds (-i 3) with
     Call-ID: w6yj5g@fake
     Max-Forwards: 70
 
+and so on ...
 
 ## Installation
 You need to download the sipping.py script and run it:
