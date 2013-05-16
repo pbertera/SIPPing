@@ -307,7 +307,7 @@ This example shows how to send out REGISTER requests every 3 seconds (-i 3) with
 
     ./sipping.py -r examples/register.txt -d 172.16.18.35 -vuser:testuser -v .callid:"''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(6))" -m string -m random -i 3 -S  172.16.18.90
 
-**Request sent:**
+**First request sent:**
 
     REGISTER sip:172.16.18.35 SIP/2.0
     Content-Length: 0
@@ -321,7 +321,21 @@ This example shows how to send out REGISTER requests every 3 seconds (-i 3) with
     CSeq: 1 REGISTER
     Call-ID: j8c5vl@fake
     Max-Forwards: 70
+    
+**Second request sent:**
 
+    REGISTER sip:172.16.18.35 SIP/2.0
+    Content-Length: 0
+    Via: SIP/2.0/UDP 172.16.18.90:5060;branch=z9hG4bK-p985iy;rport
+    From: "fake" <sip:fake@172.16.18.90>;tag=as2e95fad1
+    Supported: path, outbound, gruu
+    Expires: 3600
+    User-Agent: SIPPing fake UA
+    To: <sip:Snom@172.16.18.35:5060;line=kutixubf>
+    Contact: <sip:fake@172.16.18.35:5060>
+    CSeq: 2 REGISTER
+    Call-ID: w6yj5g@fake
+    Max-Forwards: 70
 
 
 ## Installation
