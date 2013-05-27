@@ -348,7 +348,7 @@ or
     chmod +x sipping.py
     ./sipping.py [options]
 
-You can download SIPPing from the git master branch on [github](https://github.com/pbertera/SIPPing/archive/master.zip).
+You can download SIPPing from the git master branch on [github](https://github.com/snom-it/SIPPing/archive/master.zip).
 
 #### Requirements:
 There is no particular requirements, this script runs on standard Python 2.X (tested with >= v2.4), no additional modules is required. Runs on GNU/Linux, MacOSX and Windows (untested at the moment).
