@@ -228,6 +228,8 @@ With this command you can turn off the phone led:
 
     ./sipping.py -d 172.16.18.35 -r examples/snom-led-off.txt -v user:202 -v key:$key -v .callid:"''.join(random.choice(string.ascii_lowercase + string.digits) for x in range(6))" -m string -m random -c1 -a -q
 
+More details about this protocol [here](http://wiki.snom.com/Category:HowTo:LED_Remote_Control)
+
 ## include an external file
 
 This command uses a python evaluated variable to include an external file:
