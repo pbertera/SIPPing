@@ -3,7 +3,7 @@
 # -*- coding: UTF-8 -*-
 # -*- Mode: Python -*-
 #
-# Copyright (C) 2013 Bertera Pietro <pietro@bertera.it>
+# Copyright (C) 2013 snom technology <pietro.bertera@snom.com>
 #
 # This program is available under the Lesser General Public Licence (LGPL) Version 3
 
