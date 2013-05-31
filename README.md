@@ -13,6 +13,11 @@ With SIPPing you can create SIP Requests based on simple text templates. In the 
 * you can dynamically load any python module used by your python variables
 * *Content-Length* and *CSeq* headers can be automatically generated (if not present in template file)
 
+### Usage note:
+
+This software is released for didactical and debugging purposes. You're free to use it at your own risk.
+You can modify and redistribute this program under the [LGPLv3](http://www.gnu.org/licenses/lgpl-3.0.txt) license terms.
+
 ### Templates:
 
 SIPPing uses a simple templates mechanism based on Python dictionary-based string formatting.
