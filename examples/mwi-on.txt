@@ -1,0 +1,13 @@
+NOTIFY sip:%(user)s@%(dest_ip)s:%(dest_port)s SIP/2.0
+Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s
+From: <sip:%(user)s@%(source_ip)s>
+To: <sip:%(user)s@%(dest_ip)s:%(dest_port)s>
+Call-ID: %(callid)s
+CSeq: %(seq)s NOTIFY
+Max-Forwards: 70
+Event: message-summary
+Content-Type: application/simple-message-summary
+
+Message-Account: sip:151@172.16.18.40
+Messages-Waiting: yes
+Voice-Message: 1/0 (0/0)
