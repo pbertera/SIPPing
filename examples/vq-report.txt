@@ -1,0 +1,37 @@
+PUBLISH sip:%(user)s@%(dest_ip)s:%(dest_port)s SIP/2.0
+Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s;branch=z9hG4bK-2t9km7x85z4r;rport
+From: "fake" <sip:fake@%(source_ip)s>;tag=as2e95fad1
+To: <sip:%(user)s@%(dest_ip)s:%(dest_port)s;line=kutixubf>
+Call-ID: 3871ab8089fd-h90zx4r5mlfj
+CSeq: %(seq)d PUBLISH
+Max-Forwards: 70
+Contact: <sip:fake@%(source_ip)s:%(source_port)s>
+User-Agent: SIPPing 
+Event: vq-rtcpxr
+Accept: application/sdp, message/sipfrag
+Content-Type: application/vq-rtcpxr
+
+VQSessionReport: CallTerm
+CallID:b4d42387@pbx
+LocalID:"John Doe" <sip:102@pbx.example.com>
+RemoteID:"Anonymous" <sip:anonymous@pbx.example.com;user=phone>
+OrigID:"Anonymous" <sip:anonymous@pbx.example.com;user=phone>
+LocalAddr:IP=172.16.18.187 PORT=60696 SSRC=0x2769A169
+RemoteAddr:IP=81.29.211.196 PORT=50086 SSRC=0x87F33D64
+DialogID:b4d42387@pbx;to-tag=1094356377;from-tag=ugyisema34
+x-UserAgent:snom710/8.7.3.201309022318
+LocalMetrics:
+Timestamps:START=2000-01-04T08:12:27Z STOP=2000-01-04T08:12:48Z
+SessionDesc:PT=0 PD=PCMU SR=8000 PPS=50 SSUP=off
+x-SIPterm:SDC=OK SDT=21 SDR=AN
+JitterBuffer:JBA=3 JBR=2 JBN=39 JBM=40 JBX=240
+PacketLoss:NLR=0.0 JDR=0.0
+BurstGapLoss:BLD=0.0 BD=0 GLD=0.0 GD=20440 GMIN=16
+Delay:RTD=34 ESD=0 IAJ=1
+QualityEst:MOSLQ=4.1 MOSCQ=3.9
+RemoteMetrics:
+JitterBuffer:JBA=0 JBR=0 JBN=0 JBM=0 JBX=0
+PacketLoss:NLR=0.0 JDR=0.0
+BurstGapLoss:BLD=0.0 BD=0 GLD=0.0 GD=18458 GMIN=16
+Delay:RTD=34 ESD=0 IAJ=0
+QualityEst:MOSLQ=4.1 MOSCQ=4.1
