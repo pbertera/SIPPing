@@ -6,6 +6,7 @@
 # Copyright (C) 2013 snom technology <pietro.bertera@snom.com>
 #
 # This program is available under the Lesser General Public Licence (LGPL) Version 3
+# This software is released for didactical and debugging purposes. You're free to use it at your own risk.
 
 import socket
 import time
@@ -346,8 +347,8 @@ def main():
 					sock.sendto(str(sip_req),(options.dest_ip, options.dest_port))
 				except Exception, e:
 					print "ERROR: cannot send packet to %s:%d. %s" % (options.dest_ip, options.dest_port, e)
-				if not options.quiet:	
-					print "sent Request %s to %s:%d cseq=%s" % (sip_req.method, options.dest_ip, options.dest_port, sip_req.headers['cseq'].split()[0])
+				if not options.quiet:
+                    print "sent Request %s to %s:%d cseq=%s len=%d" % (sip_req.method, options.dest_ip, options.dest_port, sip_req.headers['cseq'].split()[0], len(str(sip_req)))
 					if options.verbose:
 						print "\n=== Full Request sent ===\n"
 						print sip_req
