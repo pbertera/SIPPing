@@ -1,10 +1,10 @@
-SUBSCRIBE sip:MAC%%3a%(mac)s SIP/2.0
+SUBSCRIBE sip:MAC%%3a%(mac)s@fake SIP/2.0
 Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s;rport
 From: <sip:MAC%%3a%(mac)s>;tag=658512961
 To: <sip:MAC%%3a%(mac)s>
 Call-ID: 1930770594@ciccio
 CSeq: 1 SUBSCRIBE
-Event: ua-profile;profile-type="device";vendor="OEM";model="OEM";version="7.1.19"
+Event: ua-profile;profile-type="device";vendor="snom";model="%(model)s";version="7.1.19"
 Expires: 0
 Accept: application/url
 Contact: <sip:%(source_ip)s:%(source_port)s>
