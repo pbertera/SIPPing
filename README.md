@@ -209,7 +209,7 @@ This command force a phone to reboot and synchronize its settings with the provi
 
 This command sends out a SUBSCRIBE for PnP provisioning
 
-    sipping.py -d sip.mcast.net -p 5060 -S 172.16.18.91 -P 5060 -r examples/snom-pnp.txt -v mac:3C0754399E3D
+    sipping.py -d sip.mcast.net -p 5060 -S 172.16.18.91 -P 5060 -r examples/snom-pnp.txt -v model:snom720 -v mac:3C0754399E3D
 
 ### fire-up a minibrowser application on a snom phone
 
