@@ -14,6 +14,9 @@ import sys
 import optparse
 import select
 import cStringIO
+import re
+
+from string import Template
 
 def_request = """OPTIONS sip:%(dest_ip)s:%(dest_port)s SIP/2.0
 Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s
@@ -26,6 +29,11 @@ User-Agent: SIPPing
 Date: Wed, 24 Apr 2013 20:35:23 GMT
 Allow: INVITE, ACK, CANCEL, OPTIONS, BYE, REFER, SUBSCRIBE, NOTIFY, INFO, PUBLISH
 Supported: replaces, timer"""
+
+def_out = ""
+
+class CustomTemplate(Template):
+    idpattern = r'[a-z][\.\-_a-z0-9]*'
 
 class SipError(Exception): pass
 class SipUnpackError(SipError): pass
@@ -160,6 +168,20 @@ class Response(Message):
         return '%s/%s %s %s\r\n' % (self.__proto, self.version, self.status,
                                     self.reason) + Message.__str__(self)
 
+def render_template(template, template_vars):
+    for k in template_vars.keys():
+        if k.startswith("."):
+            template_vars[k[1:]] = eval(template_vars[k])
+    try:
+        ret = template % template_vars
+    except KeyError, e:
+        sys.stderr.write("ERROR: missing template variable. %s\n" % e)
+        sys.exit(-1)
+    except Exception, e:
+        sys.stderr.write("ERROR: error in template processing. %s\n" % e)
+        sys.exit(-1)
+    return ret
+
 def gen_request(template_vars, options):
 
 	for i in xrange(options.count):
@@ -170,28 +192,21 @@ def gen_request(template_vars, options):
 				template_vars[k[1:]] = eval(template_vars[k])
 
 		if options.request_template == None:
-			request = def_request % template_vars
+			request = render_template(def_request, template_vars)
 
 		else:
 			try:
 				f = open(options.request_template)
 				file_request = f.read()
 				f.close()
-			except Exception, e:
-				print "ERROR: cannot open file %s. %s" % (options.request_template, e)
-				sys.exit(-1)
-			try:
-				request = file_request % template_vars
-			except KeyError, e:
-				print "ERROR: missing template variable. %s" % e	
-				sys.exit(-1)
-			except Exception, e:
-				print "ERROR: error in template processing. %s" % e	
-				sys.exit(-1)
-		try:
+				request = render_template(file_request, template_vars)
+	        except Exception, e:
+                sys.stderr.write("ERROR: cannot open file %s. %s\n" % (options.request_template, e))
+                sys.exit(-1)	
+        try:
 			req = Request(request)
 		except SipUnpackError, e:
-			print "ERROR: malformed SIP Request. %s" % e
+			sys.stderr.write("ERROR: malformed SIP Request. %s\n" % e)
 			sys.exit(-1)
 		
 		if "cseq" not in req.headers:
@@ -203,7 +218,7 @@ def open_sock(options):
 		sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
 		sock.setblocking(0)
 	except Exception, e:
-		print "ERROR: cannot create socket. %s" % e
+		sys.stderr.write("ERROR: cannot create socket. %s\n" % e)
 		sys.exit(-1)
 	try:
 		sock.seckopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -215,28 +230,59 @@ def open_sock(options):
 	sock.settimeout(options.wait)
 	return sock
 
-def print_reply(buf, err=None, verbose=False, quiet=False):
+def print_reply(buf, template_vars=None, out_regex=None, out_replace=None, err=None, verbose=False, quiet=False):
 	src_ip = buf[1][0]
 	src_port = buf[1][1]
 	
+    template_vars['sock_src_ip'] = src_ip
+    template_vars['sock_src_port'] = src_port
+
 	try:
 		resp = Response(buf[0])
 	except SipUnpackError, e:
 		resp = Request(buf[0])
-	
+    
 	server = "%s:%s" % (src_ip,src_port)
 
-	if not quiet:	
-		if resp.__class__.__name__ == "Response":
-			print "received Response %s %s from %s:%s cseq=%s" % (resp.status, resp.reason, src_ip, src_port, resp.headers['cseq'].split()[0])
-			if verbose:
-				print "\n=== Full Response received ===\n"
-				print resp
-		elif resp.__class__.__name__ == "Request":
-			print "received Request %s %s from %s:%s cseq=%s" % (resp.method, resp.uri, src_ip, src_port, resp.headers['cseq'].split()[0])
-			if verbose:
-				print "\n=== Full Request received ===\n"
-				print resp
+    if resp.__class__.__name__ == "Response":
+        template_vars['status'] = resp.status
+        template_vars['reason'] = resp.reason
+        if not out_regex:
+            out_regex = '(.*\n)*'
+        if not out_replace:
+			out_replace = "received Response %(status)s %(reason)s from %(sock_src_ip)s:%(sock_src_port)s cseq=%(seq)s\n" % template_vars
+ 	elif resp.__class__.__name__ == "Request":
+        template_vars['method'] = resp.method
+        template_vars['uri'] = resp.uri
+	    if not out_replace:	
+            out_regex = '(.*\n)*'
+        if not out_replace:
+            out_replace = "received Request %(method)s %(uri)s from %(sock_src_ip)s:%(sock_src_port)s cseq=%(seq)s\n" % template_vars
+	if verbose:
+        sys.stderr.write("%s\n" % resp)
+  
+    if True:
+        try:
+            out = re.sub(out_regex, out_replace, "%s" % resp)
+            #replaced_out = CustomTemplate(out).safe_substitute(template_vars)
+            replaced_out = out % template_vars
+            print replaced_out
+        except Exception, e:
+            sys.stderr.write("ERROR: an issue is occoured applying regex substitution:\n")
+            sys.stderr.write("\t-----------------------------------\n")
+            sys.stderr.write("\t%s\n" % e)
+            sys.stderr.write("\t-----------------------------------\n")
+            sys.stderr.write("\tTemplate vars:\n")
+            for k in template_vars:
+               sys.stderr.write("\t\t%s:'%s'\n" % (k, template_vars[k]))
+            sys.stderr.write("\tRegex: '%s'\n" % out_regex)
+            sys.stderr.write("\tSubstitution string: '%s'\n" % out_replace)
+            sys.stderr.write("\tSubstitution text: '%s'\n" % replaced_out)
+            sys.stderr.write("\tResponse: \n")
+            sys.stderr.write("\t-----------------------------------\n\t")
+            sys.stderr.write("\n\t".join(resp.__str__().split("\n")))
+            sys.stderr.write("-----------------------------------\n")
+            sys.stderr.write("%s\n" % resp)
 	return True
 
 def main():
@@ -284,18 +330,24 @@ def main():
 	
 	opt.add_option('-m', dest='modules', type='string', default=[], action='append',
 						   help='load additionals Python modules used in Python interpreted template variables')
+	
+    opt.add_option('-O', dest='out_regex', type='string', default="",
+						   help='regex to apply to response received, (default \'(.*\n)*\')')
+
+    opt.add_option('-R', dest='out_replace', type='string', default="",
+            help='print this replace string applied to the response')
 
 	options, args = opt.parse_args(sys.argv[1:])
 
 	if options.print_template:
-		print def_request
+		sys.stderr.write("%s\n" % def_request)
 		sys.exit()
 	
 	for m in options.modules:
 		globals()[m] = __import__(m)
 	
 	if not options.dest_ip:
-		print "ERROR: destination ip not defined"
+		sys.stderr.write("ERROR: destination ip not defined\n")
 		opt.print_help()
 		sys.exit(-1)
 
@@ -313,24 +365,23 @@ def main():
 			val = ":".join(v.split(":")[1:])
 			template_vars.update({key: val})
 		except IndexError:
-			print "ERROR: variables must be in format name:value. %s" % v
+			sys.stderr.write("ERROR: variables must be in format name:value. %s\n" % v)
 			opt.print_help()
 			sys.exit() 
 		
 	if options.verbose:
-		print "=======================================" 
-		print "I'm using these variables in templates: "
-		print "=======================================" 
+		sys.stderr.write("=======================================\n")
+		sys.stderr.write("I'm using these variables in templates: \n")
+		sys.stderr.write("=======================================\n")
 		for k in template_vars:
-			print "%s: %s" % (k, template_vars[k])	
-		print "=======================================" 
-		print
+			sys.stderr.write("%s: %s\n" % (k, template_vars[k]))
+		sys.stderr.write("=======================================\n\n")
 
 	count = options.count
 	try:
 		sock = open_sock(options)
 	except Exception, e:
-		print "ERROR: cannot open socket. %s" % e
+		sys.stderr.write("ERROR: cannot open socket. %s\n" % e)
 		sys.exit(-1)
 
 	sent = rcvd = ok_recvd = notify_recvd = 0 
@@ -346,12 +397,12 @@ def main():
 				try:	
 					sock.sendto(str(sip_req),(options.dest_ip, options.dest_port))
 				except Exception, e:
-					print "ERROR: cannot send packet to %s:%d. %s" % (options.dest_ip, options.dest_port, e)
+					sys.stderr.write("ERROR: cannot send packet to %s:%d. %s\n" % (options.dest_ip, options.dest_port, e))
 				if not options.quiet:
-                    print "sent Request %s to %s:%d cseq=%s len=%d" % (sip_req.method, options.dest_ip, options.dest_port, sip_req.headers['cseq'].split()[0], len(str(sip_req)))
+                    sys.stderr.write("sent Request %s to %s:%d cseq=%s len=%d\n" % (sip_req.method, options.dest_ip, options.dest_port, sip_req.headers['cseq'].split()[0], len(str(sip_req))))
 					if options.verbose:
-						print "\n=== Full Request sent ===\n"
-						print sip_req
+						sys.stderr.write("\n=== Full Request sent ===\n\n")
+						sys.stderr.write("%s\n" % sip_req)
 				sent += 1
 			
 				if not options.aggressive:
@@ -362,7 +413,7 @@ def main():
 						if s == sock:
 							buf = None
 							buf = sock.recvfrom(0xffff)
-							print_reply(buf, verbose=options.verbose, quiet=options.quiet)
+							print_reply(buf, template_vars, options.out_regex, options.out_replace, verbose=options.verbose, quiet=options.quiet)
 							rcvd += 1
 	
 			except socket.timeout:
@@ -372,8 +423,8 @@ def main():
 		pass
 
 	if not options.quiet:
-		print '\n--- statistics ---'
-		print '%d packets transmitted, %d packets received, %.1f%% packet loss' % (sent, rcvd, (float(sent - rcvd) / sent) * 100)
+		sys.stderr.write('\n--- statistics ---\n')
+		sys.stderr.write('%d packets transmitted, %d packets received, %.1f%% packet loss\n' % (sent, rcvd, (float(sent - rcvd) / sent) * 100))
 
 if __name__ == '__main__':
 	main()

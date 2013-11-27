@@ -12,6 +12,7 @@ With SIPPing you can create SIP Requests based on simple text templates. In the 
 * you can use Python code for dynamic variable generation
 * you can dynamically load any python module used by your python variables
 * *Content-Length* and *CSeq* headers can be automatically generated (if not present in template file)
+* print on stdout received response with regex substitution applied
 
 ### Usage note:
 
@@ -167,6 +168,8 @@ Here the list of available options:
         -t                   print the default request template
         -m MODULES           load python modules used in python interpreted template
                              variables
+        -O OUT_REGEX         regex to apply to response received, (default '(.* )*')
+        -R OUT_REPLACE       print this replace string applied to the response
 
 ## Examples
 
