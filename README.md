@@ -376,3 +376,5 @@ There is no particular requirements, this script runs on standard Python 2.X (te
     **ERROR: missing template variable. 'var_name'**
 
 * **A:** this means that a variable with name **var_name** is missing, you can declare via command line using the *-v var_name:value* switch.
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/pbertera/SIPPing/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
