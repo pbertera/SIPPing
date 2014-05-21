@@ -1,0 +1,10 @@
+MESSAGE sip:%(to)s@%(dest_ip)s:%(dest_port)s;transport=udp SIP/2.0
+From: "%(from)s" <sip:%(from)s@%(source_ip)s>;tag=as2e95fad1
+To: <sip:%(to)s@%(dest_ip)s:%(dest_port)s;line=kutixubf>
+Call-ID: 12341
+CSeq: %(cseq)s MESSAGE
+Max-Forwards: 70
+Contact: <sip:%(from)s@%(source_ip)s:%(source_port)s>
+Content-Type: text/plain
+
+%(body)s
