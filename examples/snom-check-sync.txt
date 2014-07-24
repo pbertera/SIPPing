@@ -1,7 +1,11 @@
 NOTIFY sip:%(user)s@%(dest_ip)s SIP/2.0
-To: sip:%(user)s@%(dest_ip)s
-From: sip:sipsak@%(source_ip)s
+Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s;branch=z9hG4bK001b84f6;rport
+Max-Forwards: 70
+From: "fake" <sip:fake@%(source_ip)s>;tag=as2e95fad1
+To: <sip:%(user)s@%(dest_ip)s:%(dest_port)s;line=kutixubf>
+Contact: <sip:fake@%(source_ip)s:%(source_port)s>
 CSeq: 10 NOTIFY
+Contact: <sip:fake@%(source_ip)s:%(source_port)s>
 Call-ID: 1234@%(source_ip)s
 Event: check-sync;reboot=false
 
