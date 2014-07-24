@@ -265,8 +265,6 @@ def print_reply(buf, template_vars=None, out_regex=None, out_replace=None, err=N
     except SipUnpackError, e:
         resp = Request(buf[0])
 
-    server = "%s:%s" % (src_ip, src_port)
-
     if resp.__class__.__name__ == "Response":
         template_vars['status'] = resp.status
         template_vars['reason'] = resp.reason
@@ -384,14 +382,13 @@ def main():
                 sys.stderr.write("%s: %s\n" % (k, template_vars[k]))
             sys.stderr.write("=======================================\n\n")
 
-        count = options.count
         try:
             sock = open_sock(options)
         except Exception, e:
             sys.stderr.write("ERROR: cannot open socket. %s\n" % e)
             sys.exit(-1)
 
-        sent = rcvd = ok_recvd = notify_recvd = 0
+        sent = rcvd = 0
 
         try:
             for req in gen_request(template_vars, options):
