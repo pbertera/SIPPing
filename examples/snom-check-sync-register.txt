@@ -1,6 +1,7 @@
 NOTIFY sip:%(user)s@%(dest_ip)s SIP/2.0
 Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s;branch=z9hG4bK001b84f6;rport
 Max-Forwards: 70
+User-Agent: SIPPing
 From: "fake" <sip:fake@%(source_ip)s>;tag=as2e95fad1
 To: <sip:%(user)s@%(dest_ip)s:%(dest_port)s;line=kutixubf>
 Contact: <sip:fake@%(source_ip)s:%(source_port)s>

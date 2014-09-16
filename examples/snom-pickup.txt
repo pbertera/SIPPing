@@ -10,4 +10,9 @@ Subject: buttons
 Content-Type: application/x-buttons
 
 k=%(key)s
-c=off
+o=%(color)s
+c=pickup
+l=42
+n=*14
+i=123455
+a=invite
