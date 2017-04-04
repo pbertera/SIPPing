@@ -1,0 +1,10 @@
+OPTIONS sip:%(dest_ip)s SIP/2.0
+Via: SIP/2.0/UDP %(source_ip)s:%(source_port)s;branch=z9hG4bK001b84f6;rport
+From: "sip ping" <sip:ping\@%(source_ip)s>
+To: <sip:%(dest_ip)s>
+Contact: <sip:ping\@%(source_ip)s>
+Call-ID: 7066d2f12e6f22ec1dc1231f4cade6be\@%(source_ip)s
+User-Agent: SIPPing
+Date: %(date)s
+Allow: ACK, CANCEL
+Content-Length: 0
